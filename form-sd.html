@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Expedição SD</title>
+  <link rel="icon" type="image/png" href="icon.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --shopee-orange: #ee4d2d;
+      --shopee-dark: #b32400;
+      --bg: #ffffff;
+      --text: #333333;
+      --modal-bg: #ffffff;
+      --input-bg: #f9f9f9;
+      --border: #ccc;
+      --focus: var(--shopee-orange);
+    }
+
+    body.dark-mode {
+      --bg: #1e1e1e;
+      --text: #f5f5f5;
+      --modal-bg: #2a2a2a;
+      --input-bg: #2c2c2c;
+      --border: #555;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Poppins', sans-serif;
+      overflow-y: auto;
+    }
+
+    body {
+      min-height: 100vh;
+      padding: 20px 15px;
+      background-color: var(--bg);
+      color: var(--text);
+    }
+
+    body:not(.dark-mode) {
+      background-image: url('shopee.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    body.dark-mode {
+      background-color: var(--bg);
+    }
+
+    body:not(.dark-mode) h2 {
+      color: #772600;
+    }
+
+    .layout-flex {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 500px;
+    }
+
+    h2 {
+      text-align: center;
+      color: var(--shopee-orange);
+      margin: 20px 0;
+      font-size: 24px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      background-color: var(--modal-bg);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    label {
+      font-weight: 600;
+      margin-bottom: 6px;
+      font-size: 15px;
+    }
+
+    input, select {
+      width: 100%;
+      height: 40px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      font-size: 15px;
+      background-color: var(--input-bg);
+      color: var(--text);
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--focus);
+      box-shadow: 0 0 4px var(--focus);
+    }
+
+    button[type="submit"] {
+      background-color: var(--shopee-orange);
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 12px;
+      border-radius: 6px;
+      transition: background 0.3s;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #ff6844;
+    }
+
+    #nomeMotorista {
+      font-size: 14px;
+      margin-top: -8px;
+      margin-bottom: 8px;
+      color: var(--text);
+      font-weight: normal;
+    }
+
+    .modo-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 45px;
+      height: 45px;
+      background-color: var(--shopee-orange);
+      color: white;
+      border-radius: 50%;
+      border: none;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+      cursor: pointer;
+      transition: background 0.3s;
+      z-index: 1000;
+    }
+
+    .modo-btn:hover {
+      background-color: #ff6844;
+    }
+
+    .layout-flex .letras-box {
+      background-color: var(--modal-bg);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      min-width: 180px;
+      max-width: 220px;
+      position: sticky;
+      top: 20px;
+      height: fit-content;
+    }
+
+    .letras-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .letras-header h3 {
+      font-size: 16px;
+      color: var(--shopee-dark);
+      margin: 0;
+    }
+
+    .atualizar-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: var(--shopee-orange);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 6px;
+      transition: background 0.3s, transform 0.3s;
+    }
+
+    .atualizar-btn:hover {
+      background-color: #ff6844;
+    }
+
+    .atualizar-btn img {
+      width: 20px;
+      height: 20px;
+      pointer-events: none;
+    }
+
+    .spin {
+      animation: spin 0.7s ease-in-out;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      50% { transform: rotate(180deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    #letrasContainer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    #letrasContainer div {
+      padding: 6px 12px;
+      border-radius: 6px;
+      background-color: var(--shopee-orange);
+      color: white;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.6);
+      z-index: 999;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal {
+      background: var(--modal-bg);
+      padding: 30px 20px;
+      border-radius: 16px;
+      max-width: 360px;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      font-size: 17px;
+      line-height: 1.5;
+      animation: fadeIn 0.25s ease-in-out;
+    }
+
+    .modal p {
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    .modal p::before {
+      content: "✅ ";
+      font-size: 24px;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .modal button {
+      padding: 10px 30px;
+      border-radius: 8px;
+      background-color: var(--shopee-orange);
+      border: none;
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .modal button:hover {
+      background-color: #ff6844;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <button class="modo-btn" id="btnModo" onclick="alternarModo()">🌙</button>
+
+  <div class="layout-flex">
+    <div class="container">
+      <div style="text-align: center;">
+        <img src="SPX.png" alt="Shopee Express" style="max-width: 200px; margin-bottom: 10px;" />
+        <h2>Formulário de Expedição SD</h2>
+      </div>
+
+      <form id="formulario">
+        <label for="conferente">Conferente</label>
+        <div style="display: flex; gap: 10px; width: 100%;">
+          <select id="conferente" name="conferente" required style="flex: 1;"></select>
+          <button type="button" class="atualizar-btn" id="btnAtualizar" onclick="atualizarConferentes()">
+            <img id="iconAtualizar" src="atualizar.png" />
+          </button>
+        </div>
+
+        <label for="atribuicao">Atribuição (AT)</label>
+        <input type="text" name="atribuicao" required autocomplete="off">
+
+        <label for="cluster">Cluster</label>
+        <input type="text" name="cluster" required autocomplete="off">
+
+        <label for="pacotes">Quantidade de Pacotes</label>
+        <input type="number" name="pacotes" required>
+
+        <label for="id">ID do Motorista</label>
+        <input type="text" id="id" name="id" required autocomplete="off">
+
+        <div id="nomeMotorista"><strong>Nome:</strong> <span id="nome"></span></div>
+
+        <button type="submit" id="btnEnviar">Enviar</button>
+      </form>
+    </div>
+
+    <div class="letras-box">
+      <div class="letras-header">
+        <h3>Letras Liberadas</h3>
+        <button class="atualizar-btn" onclick="carregarLetrasLiberadas()" id="btnAtualizarLetras">
+          <img id="iconAtualizarLetras" src="atualizar.png" />
+        </button>
+      </div>
+      <div id="letrasContainer">Carregando...</div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modalAviso">
+    <div class="modal">
+      <p id="modalMensagem">Mensagem</p>
+      <button onclick="fecharModal()">Fechar</button>
+    </div>
+  </div>
+
+  <script>
+    const url = 'https://script.google.com/macros/s/AKfycbwHYHpSN-GMsvGixwch9cfE7botjJ6Q0I_IkyGxTXtOD0745ltmaVhv5rhvmXScvDMfAQ/exec';
+    const letrasUrl = 'https://script.google.com/macros/s/AKfycbyDOchBb8GQUROa7J210F1sGG_xiXd6jmm1G80EA7_Ratok01jTc5RsjrhlFHemCX3oqQ/exec';
+
+    function alternarModo() {
+      document.body.classList.toggle("dark-mode");
+      document.getElementById("btnModo").textContent = document.body.classList.contains("dark-mode") ? "🌞" : "🌙";
+    }
+
+    function abrirModal(mensagem) {
+      document.getElementById('modalMensagem').innerText = mensagem;
+      document.getElementById('modalAviso').style.display = 'flex';
+    }
+
+    function fecharModal() {
+      document.getElementById('modalAviso').style.display = 'none';
+    }
+
+    async function atualizarConferentes() {
+      const btn = document.getElementById("btnAtualizar");
+      const icon = document.getElementById("iconAtualizar");
+      icon.classList.add("spin");
+
+      try {
+        const response = await fetch(`${url}?tipo=conferentes_sd`);
+        let conferentes = await response.json();
+        conferentes = conferentes.filter(Boolean).sort((a, b) => a.localeCompare(b));
+        const select = document.getElementById('conferente');
+        select.innerHTML = "<option disabled selected value=''>Selecione um conferente</option>";
+        conferentes.forEach(nome => {
+          const option = document.createElement('option');
+          option.value = nome;
+          option.textContent = nome;
+          select.appendChild(option);
+        });
+      } catch {
+        abrirModal("Erro ao atualizar conferentes.");
+      } finally {
+        icon.classList.remove("spin");
+      }
+    }
+
+    async function buscarMotorista(id) {
+      if (!id) return;
+      try {
+        const res = await fetch(`${url}?tipo=id&id=${id}`);
+        const data = await res.json();
+        document.getElementById('nome').textContent = data.nome || 'Não encontrado';
+      } catch {
+        document.getElementById('nome').textContent = 'Erro';
+        abrirModal("Erro ao buscar motorista.");
+      }
+    }
+
+    document.getElementById('id').addEventListener('change', () => {
+      const id = document.getElementById('id').value.trim();
+      buscarMotorista(id);
+    });
+
+    async function carregarLetrasLiberadas() {
+      const btn = document.getElementById("btnAtualizarLetras");
+      const icon = document.getElementById("iconAtualizarLetras");
+      icon.classList.add("spin");
+
+      try {
+        const res = await fetch(`${letrasUrl}?tipo=letra`);
+        const dados = await res.json();
+        const letras = dados.letras || [];
+        const container = document.getElementById("letrasContainer");
+        container.innerHTML = "";
+        if (letras.length === 0) {
+          container.textContent = "Nenhuma letra liberada.";
+          return;
+        }
+        letras.forEach(letra => {
+          const item = document.createElement("div");
+          item.textContent = letra;
+          container.appendChild(item);
+        });
+      } catch {
+        document.getElementById("letrasContainer").textContent = "Erro ao carregar letras.";
+      } finally {
+        icon.classList.remove("spin");
+      }
+    }
+
+    document.getElementById('formulario').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const nomeMotorista = document.getElementById('nome').textContent;
+      const botao = document.getElementById('btnEnviar');
+
+      if (!nomeMotorista || nomeMotorista === 'Não encontrado' || nomeMotorista === 'Erro') {
+        abrirModal("Motorista não encontrado. Verifique o ID e tente novamente.");
+        return;
+      }
+
+      if (document.getElementById('conferente').value === '') {
+        abrirModal("Selecione um conferente.");
+        return;
+      }
+
+      const clusterValue = document.querySelector('input[name="cluster"]').value.trim();
+      if (!/^[a-zA-Z]-\d+$/.test(clusterValue)) {
+        abrirModal("Formato inválido para o campo 'Cluster'. Use o formato: letra-número (ex: E-2)");
+        return;
+      }
+
+      try {
+        botao.disabled = true;
+        botao.innerHTML = 'Enviando dados...';
+
+        const form = e.target;
+        const formData = new FormData(form);
+        formData.append("nome", nomeMotorista);
+        formData.append("destino", "Resposta Sd");
+        formData.append("datahora", new Date().toLocaleString("pt-BR"));
+
+        await fetch(url, { method: "POST", body: formData });
+
+        abrirModal("Dados enviados com sucesso!");
+        form.reset();
+        document.getElementById('nome').textContent = '';
+        atualizarConferentes();
+        carregarLetrasLiberadas();
+      } catch {
+        abrirModal("Erro ao enviar o formulário.");
+      } finally {
+        botao.disabled = false;
+        botao.innerHTML = 'Enviar';
+      }
+    });
+
+    atualizarConferentes();
+    carregarLetrasLiberadas();
+    setInterval(carregarLetrasLiberadas, 40000); // Atualiza letras a cada 40s
+  </script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Ranking de Conferentes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fff7f5;
+      padding: 30px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #ee4d2d;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    select, input[type="date"] {
+      padding: 8px;
+      margin: 10px;
+      font-size: 16px;
+    }
+
+    table {
+      margin: 20px auto;
+      border-collapse: collapse;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+    }
+
+    th {
+      background-color: #ee4d2d;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+    }
+
+    .auto-msg {
+      font-size: 14px;
+      color: #888;
+      margin-top: -5px;
+    }
+
+    .status {
+      font-size: 14px;
+      color: #888;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📊 Ranking de Conferentes</h1>
+
+    <label for="data">Data:</label>
+    <input type="date" id="data">
+
+    <label for="tipo">Fonte:</label>
+    <select id="tipo">
+      <option value="am">Ranking AM</option>
+      <option value="sd">Ranking SD</option>
+    </select>
+
+    <div class="auto-msg">(atualiza automaticamente a cada 30 segundos)</div>
+    <div class="status" id="statusMsg">Carregando dados...</div>
+
+    <table id="ranking">
+      <thead>
+        <tr>
+          <th>Conferente</th>
+          <th>Rotas Feitas</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td colspan="2">Carregando...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    const url = "https://script.google.com/macros/s/AKfycbyPT6gVOkycwvYI6vKoAo1FPcN8FlGDOyYUDtcIq4x8nQwq5sLMj1WdfSQ4tQ2wu93lyw/exec"; // 👈 Substitua pelo URL do seu Apps Script
+
+    const inputData = document.getElementById("data");
+    const selectTipo = document.getElementById("tipo");
+    const tbody = document.querySelector("#ranking tbody");
+    const status = document.getElementById("statusMsg");
+
+    function carregarRanking() {
+      const tipo = selectTipo.value;
+      const data = inputData.value;
+      if (!data) return;
+
+      const dataFormatada = data.split("-").reverse().join("/");
+
+      status.textContent = "Atualizando dados...";
+
+      fetch(`${url}?tipo=${tipo}&data=${dataFormatada}`)
+        .then(res => res.json())
+        .then(dados => {
+          tbody.innerHTML = "";
+          if (!dados.length) {
+            tbody.innerHTML = "<tr><td colspan='2'>Sem dados para esta data.</td></tr>";
+          } else {
+            dados.forEach(linha => {
+              const tr = document.createElement("tr");
+              tr.innerHTML = `<td>${linha.conferente}</td><td>${linha.rotas}</td>`;
+              tbody.appendChild(tr);
+            });
+          }
+          status.textContent = `Última atualização: ${new Date().toLocaleTimeString()}`;
+        })
+        .catch(() => {
+          tbody.innerHTML = "<tr><td colspan='2'>Erro ao carregar dados.</td></tr>";
+          status.textContent = "Erro ao buscar ranking.";
+        });
+    }
+
+    // Define data padrão como hoje
+    const hoje = new Date().toISOString().split("T")[0];
+    inputData.value = hoje;
+
+    inputData.addEventListener("change", carregarRanking);
+    selectTipo.addEventListener("change", carregarRanking);
+
+    carregarRanking(); // primeira carga
+    setInterval(carregarRanking, 30000); // atualiza a cada 30s
+  </script>
+</body>
+</html>
